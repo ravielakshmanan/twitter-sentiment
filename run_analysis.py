@@ -1,4 +1,6 @@
 # Thesis Analysis Code
+# https://de.dariah.eu/tatom/working_with_text.html
+
 import csv
 from collections import *
 import numpy as np
@@ -22,7 +24,7 @@ numoffile = int(numinput)
 for i in range(0, numoffile):
     print(
         "The politicians available are: Rand Paul, Ted Cruz, Marco Rubio, Carly Fiorina, George Pataki, John Kasich, Donald Trump, Lindsey Graham, Rick Santorum, Jeb Bush, Mike Huckabee, Chris Christie, Ben Carson, Bobby Jindal, Rick Perry, Scott Walker")
-    politician = input("Type the last name of the politician you want to analyze:   ")
+    politician = input("Type the last name of the politician you want to analyze (in lower case):   ")
     polnames.append(politician)
     for file in os.listdir("./files"):
         if file.endswith(politician + ".txt"):
@@ -32,8 +34,7 @@ for i in range(0, numoffile):
 # 1grams:
 bi_vectorizer = CountVectorizer(input='filename', encoding=u'utf-8', strip_accents='unicode', lowercase=True,
                                 ngram_range=(1, 2), analyzer=u'word', vocabulary=None)
-dtm = bi_vectorizer.fit_transform(
-    filenames)  # a document term sparse matrix, each row corresponds to a file, each column is the frequency of a given bigram
+dtm = bi_vectorizer.fit_transform(filenames)  # a document term sparse matrix, each row corresponds to a file, each column is the frequency of a given bigram
 vocab = bi_vectorizer.get_feature_names()  # a list of bigrams, with each bigram corresponding with the location in the DTM
 
 dtm = dtm.toarray()  # convert to a regular array
@@ -62,8 +63,7 @@ for i in range(0, candidatenumber):
 # vocab = np.array(vocab) #make vocab a numpy array
 
 eucdist = euclidean_distances(dtmnorm)  # calculate euclidean distances (each file is a vector)
-cosdist = 1 - cosine_similarity(
-    dtmnorm)  # calculate cosine similarity, but 1- to make the larger angle recieve a larger value (exactly the same is 0, orthagonal is 1, diametrically opposed is -1)
+cosdist = 1 - cosine_similarity(dtmnorm)  # calculate cosine similarity, but 1- to make the larger angle recieve a larger value (exactly the same is 0, orthagonal is 1, diametrically opposed is -1)
 
 # distance between all text files
 
